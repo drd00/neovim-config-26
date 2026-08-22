@@ -2,7 +2,7 @@
 
 A complete Neovim 0.12 configuration built around a small, conventional plugin stack:
 
-- transparent Tokyo Night theme, including terminal windows and floating windows;
+- transparent Vague theme, including terminal windows and floating windows;
 - automatic parentheses, brackets, quotes, and completion-menu integration;
 - native Neovim LSP using `vim.lsp.config()` and `vim.lsp.enable()`;
 - Mason-managed language servers;
@@ -72,20 +72,41 @@ nvim --version | head -n 1
 
 It must report 0.12 or newer.
 
-## Install the configuration
+## macOS
 
-Back up any existing config and copy this directory into place:
+The included bootstrap installs the Homebrew prerequisites, installs this config,
+backs up any existing Lazy plugin checkout, and restores the plugin revisions from
+`lazy-lock.json`:
+
+```bash
+./scripts/bootstrap-macos.sh
+```
+
+On a Mac without Homebrew:
+
+```bash
+./scripts/bootstrap-macos.sh --install-homebrew
+```
+
+## Install the configuration manually
+
+Back up any existing config and Lazy plugin checkout, then copy this directory into
+place. Keeping the plugin checkout separate from the new config prevents stale or
+partially-updated plugin repositories from contaminating the install:
 
 ```bash
 stamp="$(date +%Y%m%d-%H%M%S)"
+data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
 [ ! -e ~/.config/nvim ] || mv ~/.config/nvim ~/.config/nvim.backup-"$stamp"
+[ ! -d "$data_home/nvim/lazy" ] || mv "$data_home/nvim/lazy" "$data_home/nvim/lazy.backup-$stamp"
 mkdir -p ~/.config/nvim
 cp -a . ~/.config/nvim/
 ```
 
-Open Neovim:
+Restore the plugin revisions committed in `lazy-lock.json`, then open Neovim:
 
 ```bash
+nvim --headless "+Lazy! restore" +qa
 nvim
 ```
 
@@ -175,7 +196,7 @@ Your terminal emulator or compositor must also have transparency enabled. Neovim
 
 ## Updating safely
 
-After the initial setup, commit the generated `lazy-lock.json` to your configuration repository. It records the exact plugin revisions installed by Lazy:
+`lazy-lock.json` is committed with this configuration and records the exact plugin revisions tested together. After deliberately updating plugins, commit the refreshed lockfile:
 
 ```bash
 git add lazy-lock.json

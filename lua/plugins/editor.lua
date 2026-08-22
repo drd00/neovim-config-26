@@ -69,7 +69,7 @@ return {
     event = "VeryLazy",
     opts = {
       options = {
-        theme = "tokyonight",
+        theme = "auto",
         globalstatus = true,
         component_separators = "|",
         section_separators = "",

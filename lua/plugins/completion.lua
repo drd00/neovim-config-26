@@ -10,6 +10,9 @@ return {
       {
         "L3MON4D3/LuaSnip",
         version = "v2.*",
+        -- jsregexp is optional. Avoid fetching its Git submodule so a stale or
+        -- interrupted submodule checkout cannot break plugin synchronization.
+        submodules = false,
         dependencies = { "rafamadriz/friendly-snippets" },
       },
       "windwp/nvim-autopairs",

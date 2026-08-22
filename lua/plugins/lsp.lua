@@ -1,10 +1,12 @@
 return {
   {
     "neovim/nvim-lspconfig",
+    version = "^2.0.0",
     lazy = false,
     dependencies = {
       {
         "mason-org/mason.nvim",
+        version = "^2.0.0",
         lazy = false,
         opts = {
           PATH = "prepend",
@@ -13,6 +15,7 @@ return {
       },
       {
         "mason-org/mason-lspconfig.nvim",
+        version = "^2.0.0",
         lazy = false,
       },
       "hrsh7th/cmp-nvim-lsp",

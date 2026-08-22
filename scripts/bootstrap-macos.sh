@@ -139,15 +139,18 @@ fi
 
 if ((install_config == 1)); then
   config_home="${XDG_CONFIG_HOME:-$HOME/.config}"
-  mkdir -p "$config_home"
+  data_home="${XDG_DATA_HOME:-$HOME/.local/share}"
+  mkdir -p "$config_home" "$data_home"
   config_home="$(cd "$config_home" && pwd -P)"
+  data_home="$(cd "$data_home" && pwd -P)"
   config_dir="$config_home/nvim"
+  lazy_dir="$data_home/nvim/lazy"
+  stamp="$(date +%Y%m%d-%H%M%S)"
 
   if [[ "$repo_root" == "$config_dir" ]]; then
     printf 'Configuration is already installed at %s; leaving it in place.\n' "$config_dir"
   else
     if [[ -e "$config_dir" || -L "$config_dir" ]]; then
-      stamp="$(date +%Y%m%d-%H%M%S)"
       backup_dir="$config_dir.backup-$stamp"
       mv "$config_dir" "$backup_dir"
       printf 'Backed up existing Neovim config to %s\n' "$backup_dir"
@@ -158,6 +161,19 @@ if ((install_config == 1)); then
     rm -rf "$config_dir/.git"
     printf 'Installed Neovim config at %s\n' "$config_dir"
   fi
+
+  # Plugin checkouts live outside ~/.config/nvim. An older Neovim setup can
+  # therefore leave incompatible or damaged repositories behind even after the
+  # config itself is replaced. Move them aside and restore the exact revisions
+  # committed in lazy-lock.json.
+  if [[ -d "$lazy_dir" ]]; then
+    lazy_backup="$data_home/nvim/lazy.backup-$stamp"
+    mv "$lazy_dir" "$lazy_backup"
+    printf 'Backed up existing Lazy plugin state to %s\n' "$lazy_backup"
+  fi
+
+  printf 'Restoring pinned Neovim plugins from lazy-lock.json...\n'
+  nvim --headless "+Lazy! restore" +qa
 fi
 
 printf '\nBootstrap complete: %s\n' "$nvim_version_line"
