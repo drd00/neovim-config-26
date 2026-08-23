@@ -36,6 +36,16 @@ end, { desc = "Next diagnostic" })
 map("n", "<leader>dd", vim.diagnostic.open_float, { desc = "Line diagnostics" })
 map("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics list" })
 
+map("n", "<leader>tv", function()
+  vim.cmd("vsplit | terminal")
+  vim.cmd("startinsert")
+end, { desc = "Terminal vertical" })
+
+map("n", "<leader>th", function()
+  vim.cmd("split | terminal")
+  vim.cmd("startinsert")
+end, { desc = "Terminal horizontal" })
+
 map("n", "<leader>tt", function()
   vim.cmd("botright 12split")
   vim.cmd("terminal")
