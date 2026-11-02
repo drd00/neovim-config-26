@@ -10,6 +10,7 @@ A complete Neovim 0.12 configuration built around a small, conventional plugin s
 - Tree-sitter highlighting using `tree-sitter-manager.nvim`;
 - Telescope search, Git signs, lualine, and which-key;
 - Fugitive for Git commands, with Rhubarb for GitHub and GitHub Enterprise links;
+- Octo for GitHub pull requests and review threads inside Neovim;
 - one language registry at `lua/config/languages.lua`.
 
 ## Requirements
@@ -20,6 +21,7 @@ A complete Neovim 0.12 configuration built around a small, conventional plugin s
 - a C compiler and the `tree-sitter` CLI for parser installation;
 - Node.js and npm for language servers implemented in JavaScript;
 - `ripgrep` for Telescope live grep;
+- the GitHub CLI (`gh`), logged in to each GitHub host you use, for Octo;
 - `fd` is recommended for faster file search;
 - a clipboard provider such as `wl-clipboard` or `xclip` is optional.
 
@@ -172,6 +174,8 @@ Use canonical Neovim LSP configuration names from `:help lspconfig-all`, such as
 | `:TSUpdate` | Update installed parsers |
 | `:Git` | Fugitive status window (stage, commit, push) |
 | `:GBrowse` | Open the current file on GitHub |
+| `:Octo` | Pick from every Octo command |
+| `:checkhealth octo` | Diagnose Octo and `gh` login |
 
 ## Main key mappings
 
@@ -193,6 +197,10 @@ Use canonical Neovim LSP configuration names from `:help lspconfig-all`, such as
 | `<leader>gd` | Diff the current file against the index |
 | `<leader>go` | Open the current line, or visual selection, on GitHub |
 | `<leader>gy` | Copy a GitHub link to the current line, or visual selection |
+| `<leader>gp` | Open the current branch's pull request (Octo) |
+| `<leader>gP` | Pick a pull request (Octo) |
+| `<leader>gr` | Browse the pull request's diff and review threads (Octo) |
+| `<leader>gR` | Start or resume your own review (Octo) |
 | `<Esc><Esc>` in a terminal | Leave terminal mode |
 
 ## GitHub Enterprise
@@ -210,6 +218,21 @@ reports `no GBrowse handler installed` for Enterprise remotes.
 
 Line links are permalinks to the most recent commit that exists on the remote, so they open
 even when you have unpushed commits.
+
+Octo talks to GitHub through `gh`, so log in to the Enterprise server once:
+
+```bash
+gh auth login --hostname github.example.com
+```
+
+When Neovim starts inside a repository whose remote is one of the `GITHUB_ENTERPRISE_URL`
+servers, Octo is pointed at that server and leaves out fields only `github.com` supports. In any
+other repository Octo follows the remote, so `github.com` repositories keep working. The choice is
+made when Octo first loads, so restart Neovim after switching between `github.com` and Enterprise
+repositories in one session.
+
+Octo's own buffer mappings use `<localleader>`, which is also Space in this config, so inside
+Octo buffers they take priority. Press `<CR>` in an Octo buffer to list its actions.
 
 ## Transparency
 
