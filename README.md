@@ -9,6 +9,7 @@ A complete Neovim 0.12 configuration built around a small, conventional plugin s
 - completion with `nvim-cmp` and LuaSnip;
 - Tree-sitter highlighting using `tree-sitter-manager.nvim`;
 - Telescope search, Git signs, lualine, and which-key;
+- Fugitive for Git commands, with Rhubarb for GitHub and GitHub Enterprise links;
 - one language registry at `lua/config/languages.lua`.
 
 ## Requirements
@@ -169,6 +170,8 @@ Use canonical Neovim LSP configuration names from `:help lspconfig-all`, such as
 | `:checkhealth mason` | Diagnose Mason prerequisites |
 | `:TSManager` | Inspect parser installation |
 | `:TSUpdate` | Update installed parsers |
+| `:Git` | Fugitive status window (stage, commit, push) |
+| `:GBrowse` | Open the current file on GitHub |
 
 ## Main key mappings
 
@@ -186,7 +189,27 @@ Use canonical Neovim LSP configuration names from `:help lspconfig-all`, such as
 | `<leader>ca` | Code action |
 | `<leader>lf` | LSP formatting |
 | `[d` / `]d` | Previous/next diagnostic |
+| `<leader>gs` | Git status (Fugitive) |
+| `<leader>gd` | Diff the current file against the index |
+| `<leader>go` | Open the current line, or visual selection, on GitHub |
+| `<leader>gy` | Copy a GitHub link to the current line, or visual selection |
 | `<Esc><Esc>` in a terminal | Leave terminal mode |
+
+## GitHub Enterprise
+
+Rhubarb builds GitHub links for `github.com` remotes with no setup. For a GitHub Enterprise
+Server, export its base URL in your shell profile:
+
+```bash
+export GITHUB_ENTERPRISE_URL="https://github.example.com"
+```
+
+Separate several servers with commas. The URL is read from the environment rather than stored
+in this config so that internal hostnames stay out of the repository. Without it, `:GBrowse`
+reports `no GBrowse handler installed` for Enterprise remotes.
+
+Line links are permalinks to the most recent commit that exists on the remote, so they open
+even when you have unpushed commits.
 
 ## Transparency
 

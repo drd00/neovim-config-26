@@ -65,6 +65,29 @@ return {
   },
 
   {
+    "tpope/vim-fugitive",
+    cmd = { "G", "Git", "Gdiffsplit", "Gvdiffsplit", "Gread", "Gwrite", "Gedit", "GBrowse" },
+    dependencies = { "tpope/vim-rhubarb" },
+    init = function()
+      -- Rhubarb recognises github.com remotes out of the box. For GitHub Enterprise,
+      -- export GITHUB_ENTERPRISE_URL (for example https://github.example.com, or a
+      -- comma-separated list) in your shell so the hostname stays out of this repo.
+      local enterprise_urls = vim.env.GITHUB_ENTERPRISE_URL
+      if enterprise_urls and enterprise_urls ~= "" then
+        vim.g.github_enterprise_urls = vim.split(enterprise_urls, ",", { trimempty = true })
+      end
+    end,
+    keys = {
+      { "<leader>gs", "<cmd>Git<CR>", desc = "Git status" },
+      { "<leader>gd", "<cmd>Gvdiffsplit<CR>", desc = "Diff against index" },
+      { "<leader>go", "<cmd>.GBrowse<CR>", desc = "Open line on GitHub" },
+      { "<leader>go", ":GBrowse<CR>", mode = "x", desc = "Open selection on GitHub" },
+      { "<leader>gy", "<cmd>.GBrowse!<CR>", desc = "Copy GitHub link to line" },
+      { "<leader>gy", ":GBrowse!<CR>", mode = "x", desc = "Copy GitHub link to selection" },
+    },
+  },
+
+  {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     opts = {
@@ -89,6 +112,7 @@ return {
         { "<leader>c", group = "code" },
         { "<leader>d", group = "diagnostics" },
         { "<leader>f", group = "find" },
+        { "<leader>g", group = "git" },
         { "<leader>l", group = "lsp" },
         { "<leader>t", group = "toggle/terminal" },
       },
